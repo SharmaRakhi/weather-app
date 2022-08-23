@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #display{
+            height: 50px;
+            font-size: 60px;
+            text-align: center;
+            margin-top: 5%;
+        }
+        #displayTemp{
+            height: 20px;
+            text-align: center;
+            margin-top: -1%;
+        }
+        #maxMinTemp{
+            height: 20px;
+            text-align: center;
+            margin-top: 0.5%
+        }
+        
+        #input{
+            text-align: center;
+            margin-left: 41%;
+            margin-top: 2%;
+            width: 245px;
+            text-overflow: auto;
+            padding:0.5% ;
+            font-size: 20px;
+        }
+        img{
+            margin-left: 43%;
+            margin-top: 1%;   
+        }
+        
+        #dayMode{
+            background-color: lightgray;
+            border-radius: 50%;
+            border: none;
+            padding: 10px;
+            position: relative;
+            bottom: 29px;
+            left: 2px;
+        }
+        #nightMode{
+            background-color: white;
+            border-radius: 50%;
+            border: none;
+            padding: 10px; 
+            margin-left: -0.0%;
+            position: relative;
+            bottom: 29px;
+            left: -2px;
+            
+        }
+        #buttonContainer{
+         border: 2px solid lightgray;
+         width: 40px;
+         border-radius: 30px;
+         height: 25px;
+        }
+    </style>
+</head>
+<body>
+    <div id="buttonContainer"></div>
+    <button id="dayMode" onclick="dayMode()" type="radio"></button>
+    <button id="nightMode" onclick="nightMode()" type="radio"></button>
+    
+    <div id="container">
+    <div id="display">Indore</div>
+    <img src="https://www.transparentpng.com/thumb/weather-report/android-weather-icons-png-12.png" height="200" alt="">
+    <div id="displayTemp">---</div>
+    <div id="maxMinTemp">---     ---</div>
+    <input type="text" placeholder=" State/City/Country" onkeyup="getData()" id="input">
+    </div>
+</body>
+<script>
+     let Api="http://api.openweathermap.org/data/2.5/weather?q="
+     let ApiID="&units=metric&APPID=9f82a8fd7c98cd1e8b42e2cdecc3f54b"
+     let temp;
+    let maxTemp;
+    let minTemp;  
+    let time= new Date()
+    let time2=time.getHours()+":"+time.getMinutes();
+     
+
+    function getData(){
+    const inputValue=document.getElementById("input").value
+    console.log(inputValue);
+    
+    const displaElement =document.getElementById("display");
+    displaElement.innerText=inputValue;
+    
+    
+    fetch(Api+inputValue+ApiID).then(function (response){
+        return response.json();
+    }).then(function(data){
+        console.log(data.message=="city not found")
+
+        if(data.message=="city not found"){
+          const displaytemperature=document.getElementById("displayTemp").innerText="Please inter valid City/State/Country Name";
+           
+            document.getElementById("maxMinTemp").innerHTML=" ";
+            
+        }
+        else{
+         temp=data.main.temp;
+         maxTemp=data.main.temp_max;
+         minTemp=data.main.temp_min;
+         console.log(temp,maxTemp,minTemp);
+        
+        document.getElementById("displayTemp").innerHTML=temp+".C";
+        document.getElementById("maxMinTemp").innerHTML="Min:"+"     "+minTemp+".C"+"  Max:  "+maxTemp+".C";
+
+        }  
+    })
+}
+
+function nightMode(){
+    document.body.style.backgroundColor="black"
+    document.body.style.color="white";
+    document.getElementById("buttonContainer").style.backgroundColor="white";
+     const dayElement=document.getElementById("dayMode")
+     dayElement.style.backgroundColor="white"
+    const nightElement=document.getElementById("nightMode")
+    nightElement.style.backgroundColor="grey"
+}
+function dayMode(){
+    document.body.style.backgroundColor="white"
+    document.body.style.color="black";
+    const dayElement=document.getElementById("dayMode")
+     dayElement.style.backgroundColor="lightgray"
+    const nightElement=document.getElementById("nightMode")
+    nightElement.style.backgroundColor="white"
+
+
+}
+</script>
+</html>
